@@ -1,6 +1,6 @@
 {
     'name': 'Auto Replenishment',
-    'version': '19.0.1.1.0',
+    'version': '19.0.1.2.0',
     'category': 'Inventory/Purchase',
     'summary': 'Explainable replenishment recommendations based on sales quotations',
     'description': 'Analyse sales quotations and confirmed orders, compute transparent demand-based '

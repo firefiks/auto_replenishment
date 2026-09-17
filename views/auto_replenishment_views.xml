@@ -31,7 +31,11 @@
                     <field name="quotation_qty_30" string="Quoted 30d" readonly="1" optional="hide"/>
                     <field name="confirmed_qty_30" string="Confirmed 30d" readonly="1" optional="hide"/>
                     <field name="conversion_rate" string="Conversion %" readonly="1" optional="hide"/>
-                    <field name="demand_trend" widget="badge" readonly="1" optional="hide"/>
+                    <field name="demand_trend" widget="badge" readonly="1" optional="hide"
+                           decoration-danger="demand_trend == 'new'"
+                           decoration-warning="demand_trend == 'increasing'"
+                           decoration-muted="demand_trend == 'flat'"
+                           decoration-info="demand_trend == 'decreasing'"/>
                     <field name="growth_rate" string="Growth %" readonly="1" optional="hide"/>
                     <field name="qty_on_hand" string="On Hand" readonly="1"/>
                     <field name="qty_incoming" string="Incoming" readonly="1" optional="show"/>

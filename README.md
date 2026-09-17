@@ -64,8 +64,10 @@ The daily cron (`ir.cron`) runs once per day:
    | `NORMAL`          | otherwise                                                                   |
 
    Every record stores a human readable `reason` (“Why this product was flagged”).
-   The Demand Analysis list shows the status as a colored badge (URGENT red,
-   REPLENISH orange, WATCH / DEMAND INCREASING info blue).
+The Demand Analysis list shows the status as a colored badge (URGENT red,
+  REPLENISH orange, WATCH / DEMAND INCREASING info blue) and the demand trend as
+  a colored badge (NEW DEMAND red, DEMAND INCREASING orange, FLAT grey,
+  DEMAND DECREASING blue).
 
 8. **Discuss reporting**: by default `URGENT` and `REPLENISH` products are posted
    to the `#AutoReplenishment` channel (found by name, created only if missing,
