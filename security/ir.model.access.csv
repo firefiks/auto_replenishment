@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_auto_replenishment_analysis_user,auto.replenishment.analysis.user,model_auto_replenishment_analysis,group_auto_replenishment_user,1,0,0,0
+access_auto_replenishment_analysis_manager,auto.replenishment.analysis.manager,model_auto_replenishment_analysis,group_auto_replenishment_manager,1,1,1,0
+access_auto_replenishment_report_manager,auto.replenishment.report.manager,model_auto_replenishment_report,group_auto_replenishment_manager,1,1,1,0

@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="action_auto_replenishment_demand" model="ir.actions.act_window">
+            <field name="name">Demand Analysis</field>
+            <field name="res_model">auto.replenishment.analysis</field>
+            <field name="view_mode">list,form,pivot,graph</field>
+            <field name="context">{'search_default_today': 1}</field>
+        </record>
+
+        <record id="view_auto_replenishment_analysis_list" model="ir.ui.view">
+            <field name="name">auto.replenishment.analysis.list</field>
+            <field name="model">auto.replenishment.analysis</field>
+            <field name="arch" type="xml">
+                <list string="Auto Replenishment — Demand Analysis" multi_edit="0" create="False" delete="False">
+                    <header>
+                        <button name="action_run_analysis_now" string="Run Analysis Now" type="object"
+                                icon="fa-refresh" class="btn-primary"/>
+                    </header>
+                    <field name="date" readonly="1"/>
+                    <field name="product_tmpl_id" string="Product" readonly="1"/>
+                    <field name="default_code" string="I.R." readonly="1" optional="hide"/>
+                    <field name="status" widget="badge" readonly="1"
+                           decoration-danger="status == 'urgent'"
+                           decoration-warning="status == 'replenish'"
+                           decoration-info="status in ('watch', 'demand_increasing')"/>
+                    <field name="sales_channel" readonly="1" optional="hide"/>
+                    <field name="open_quotation_qty" string="Open Quotations" readonly="1"/>
+                    <field name="expected_quotation_demand" string="Expected Demand" readonly="1"/>
+                    <field name="quotation_qty_30" string="Quoted 30d" readonly="1" optional="hide"/>
+                    <field name="confirmed_qty_30" string="Confirmed 30d" readonly="1" optional="hide"/>
+                    <field name="conversion_rate" string="Conversion %" readonly="1" optional="hide"/>
+                    <field name="demand_trend" widget="badge" readonly="1" optional="hide"/>
+                    <field name="growth_rate" string="Growth %" readonly="1" optional="hide"/>
+                    <field name="qty_on_hand" string="On Hand" readonly="1"/>
+                    <field name="qty_incoming" string="Incoming" readonly="1" optional="show"/>
+                    <field name="recommended_qty" string="To Order" readonly="1"/>
+                    <field name="vendor_id" string="Vendor" readonly="1" optional="hide"/>
+                    <field name="vendor_lead_time" string="Lead" readonly="1" optional="hide"/>
+                    <field name="rfq_id" string="RFQ" readonly="1" optional="show"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_auto_replenishment_analysis_search" model="ir.ui.view">
+            <field name="name">auto.replenishment.analysis.search</field>
+            <field name="model">auto.replenishment.analysis</field>
+            <field name="arch" type="xml">
+                <search string="Demand Analysis">
+                    <field name="product_id" string="Product"/>
+                    <field name="default_code" string="Internal Reference"/>
+                    <field name="vendor_id" string="Vendor"/>
+                    <filter name="today" string="Today" domain="[('date', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter name="actionable" string="Actionable" domain="[('status', 'in', ['replenish', 'urgent', 'demand_increasing'])]"/>
+                    <separator/>
+                    <filter name="urgent" string="URGENT" domain="[('status', '=', 'urgent')]"/>
+                    <filter name="replenish" string="REPLENISH" domain="[('status', '=', 'replenish')]"/>
+                    <filter name="watch" string="WATCH" domain="[('status', '=', 'watch')]"/>
+                    <filter name="demand_increasing" string="DEMAND INCREASING" domain="[('status', '=', 'demand_increasing')]"/>
+                    <separator/>
+                    <group>
+                        <filter string="Status" name="status" domain="[]" context="{'group_by': 'status'}"/>
+                        <filter string="Sales Channel" name="channel" domain="[]" context="{'group_by': 'sales_channel'}"/>
+                        <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}"/>
+                        <filter string="Demand Trend" name="trend" domain="[]" context="{'group_by': 'demand_trend'}"/>
+                        <filter string="Product" name="product" domain="[]" context="{'group_by': 'product_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_auto_replenishment_analysis_form" model="ir.ui.view">
+            <field name="name">auto.replenishment.analysis.form</field>
+            <field name="model">auto.replenishment.analysis</field>
+            <field name="arch" type="xml">
+                <form string="Demand Analysis">
+                    <header>
+                        <button name="action_create_rfq" string="Create Draft RFQ" type="object"
+                                class="btn-primary" groups="auto_replenishment.group_auto_replenishment_manager"/>
+                        <button name="action_run_analysis_now" string="Re-Run Analysis" type="object" icon="fa-refresh"/>
+                    </header>
+                    <field name="status" widget="badge" decoration-danger="status == 'urgent'"
+                           decoration-warning="status == 'replenish'"
+                           decoration-info="status in ('watch','demand_increasing')" class="o_statusbar badge"/>
+                    <field name="rfq_id" string="Draft RFQ" readonly="1"/>
+                    <group>
+                        <group>
+                            <field name="product_tmpl_id" readonly="1"/>
+                            <field name="default_code" readonly="1"/>
+                            <field name="company_id" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="date" readonly="1"/>
+                            <field name="sales_channel" readonly="1"/>
+                            <field name="last_analysis" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Recommendation" name="recommendation">
+                            <group>
+                                <group>
+                                    <field name="status" readonly="1"/>
+                                    <field name="recommended_qty" readonly="1"/>
+                                    <field name="expected_quotation_demand" readonly="1"/>
+                                    <field name="expected_demand" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="qty_on_hand" readonly="1"/>
+                                    <field name="qty_incoming" readonly="1"/>
+                                    <field name="qty_forecast" readonly="1"/>
+                                    <field name="safety_stock" readonly="1"/>
+                                </group>
+                            </group>
+                            <field name="reason" nolabel="1" readonly="1"/>
+                        </page>
+                        <page string="Demand Summary" name="demand">
+                            <group string="Quotations" col="6">
+                                <group string="7 days">
+                                    <field name="quotation_count_7" readonly="1"/>
+                                    <field name="quotation_qty_7" readonly="1"/>
+                                </group>
+                                <group string="30 days">
+                                    <field name="quotation_count_30" readonly="1"/>
+                                    <field name="quotation_qty_30" readonly="1"/>
+                                </group>
+                                <group string="90 days">
+                                    <field name="quotation_count_90" readonly="1"/>
+                                    <field name="quotation_qty_90" readonly="1"/>
+                                </group>
+                                <group string="365 days">
+                                    <field name="quotation_count_365" readonly="1"/>
+                                    <field name="quotation_qty_365" readonly="1"/>
+                                </group>
+                            </group>
+                            <group string="Confirmed Sales" col="6">
+                                <group string="7 days">
+                                    <field name="confirmed_count_7" readonly="1"/>
+                                    <field name="confirmed_qty_7" readonly="1"/>
+                                </group>
+                                <group string="30 days">
+                                    <field name="confirmed_count_30" readonly="1"/>
+                                    <field name="confirmed_qty_30" readonly="1"/>
+                                </group>
+                                <group string="90 days">
+                                    <field name="confirmed_count_90" readonly="1"/>
+                                    <field name="confirmed_qty_90" readonly="1"/>
+                                </group>
+                                <group string="365 days">
+                                    <field name="confirmed_count_365" readonly="1"/>
+                                    <field name="confirmed_qty_365" readonly="1"/>
+                                </group>
+                            </group>
+                            <group string="Trend &amp; Conversion" col="2">
+                                <field name="trend_quotation_qty" readonly="1"/>
+                                <field name="prev_quotation_qty" readonly="1"/>
+                                <field name="demand_trend" readonly="1"/>
+                                <field name="growth_rate" readonly="1"/>
+                                <field name="conversion_rate" readonly="1"/>
+                                <field name="conversion_rate_base" readonly="1"/>
+                                <field name="conversion_fallback" readonly="1"/>
+                                <field name="conversion_sample_size" readonly="1"/>
+                            </group>
+                        </page>
+                        <page string="Vendor &amp; Stock Parameters" name="params">
+                            <group>
+                                <group>
+                                    <field name="vendor_id" readonly="1"/>
+                                    <field name="vendor_lead_time" readonly="1"/>
+                                    <field name="vendor_min_qty" readonly="1"/>
+                                    <field name="purchase_multiple" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="safety_stock" readonly="1"/>
+                                    <field name="open_quotation_qty" readonly="1"/>
+                                    <field name="open_quotation_count" readonly="1"/>
+                                    <field name="rfq_state" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_auto_replenishment_analysis_pivot" model="ir.ui.view">
+            <field name="name">auto.replenishment.analysis.pivot</field>
+            <field name="model">auto.replenishment.analysis</field>
+            <field name="arch" type="xml">
+                <pivot string="Demand Analysis">
+                    <field name="date" type="col"/>
+                    <field name="status" type="row"/>
+                    <field name="product_id" type="row"/>
+                    <field name="recommended_qty" type="measure"/>
+                    <field name="expected_quotation_demand" type="measure"/>
+                    <field name="qty_on_hand" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="view_auto_replenishment_analysis_graph" model="ir.ui.view">
+            <field name="name">auto.replenishment.analysis.graph</field>
+            <field name="model">auto.replenishment.analysis</field>
+            <field name="arch" type="xml">
+                <graph string="Demand Analysis">
+                    <field name="status"/>
+                    <field name="recommended_qty" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <menuitem id="menu_auto_replenishment_root" name="Auto Replenishment"
+                  parent="stock.menu_stock_root"
+                  sequence="40"
+                  groups="auto_replenishment.group_auto_replenishment_user"/>
+        <menuitem id="menu_auto_replenishment_demand" name="Demand Analysis"
+                  parent="menu_auto_replenishment_root"
+                  action="action_auto_replenishment_demand"
+                  sequence="10"
+                  groups="auto_replenishment.group_auto_replenishment_user"/>
+
+    </data>
+</odoo>

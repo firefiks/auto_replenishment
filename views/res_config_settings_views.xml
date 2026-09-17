@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.autoreplenishment</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="60"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//app[@name='stock']" position="after">
+                    <app data-string="Auto Replenishment" string="Auto Replenishment" name="auto_replenishment"
+                         groups="auto_replenishment.group_auto_replenishment_user">
+                        <block title="Demand Windows &amp; Signals" name="ar_windows_block">
+                            <setting string="Analysis windows (days) - quotations and confirmed orders are counted per window."
+                                     help="Time windows used by the demand analysis and the trend comparison.">
+                                <div class="row">
+                                    <field name="ar_period_short" class="col-2"/>
+                                    <span class="align-middle">Short</span>
+                                    <field name="ar_period_medium" class="col-2"/>
+                                    <span class="align-middle">Medium</span>
+                                    <field name="ar_period_long" class="col-2"/>
+                                    <span class="align-middle">Long</span>
+                                    <field name="ar_period_long_term" class="col-2"/>
+                                    <span class="align-middle">Longest</span>
+                                </div>
+                                <field name="ar_trend_window" class="col-2"/>
+                                <label for="ar_trend_window"/>
+                            </setting>
+                            <setting string="Conversion, safety stock and growth signal">
+                                <div class="row">
+                                    <field name="ar_fallback_conversion" class="col-2"/>
+                                    <span class="align-middle">Fallback conversion rate (%)</span>
+                                    <field name="ar_min_conversion_sample" class="col-2"/>
+                                    <span class="align-middle">Min sample before using history</span>
+                                </div>
+                                <div class="row">
+                                    <field name="ar_growth_threshold" class="col-2"/>
+                                    <span class="align-middle">Growth threshold for DEMAND INCREASING (%)</span>
+                                    <field name="ar_safety_stock" class="col-2"/>
+                                    <span class="align-middle">Safety stock</span>
+                                </div>
+                            </setting>
+                            <setting string="Sales channel scope"
+                                     help="Only orders of the selected channel are used for the demand aggregation.">
+                                <field name="ar_channel_filter"/>
+                            </setting>
+                        </block>
+
+                        <block title="Purchasing" name="ar_purchasing_block">
+                            <setting string="Create a draft RFQ automatically for every REPLENISH / URGENT product."
+                                     help="Off by design: we recommend reviewing the demanded quantities first. When enabled, the daily cron creates draft (unconfirmed) RFQs for each actionable product. The 'Create Draft RFQ' button remains available on each analysis record.">
+                                <field name="ar_auto_create_rfq"/>
+                            </setting>
+                        </block>
+
+                        <block title="Reporting to Discuss" name="ar_reporting_block">
+                            <setting string="Send replenishment updates to a Discuss channel">
+                                <field name="ar_discuss_enabled"/>
+                                <div class="row mt-2">
+                                    <field name="ar_discuss_channel_name" class="col-4"/>
+                                    <span class="align-middle">Channel name (created if missing)</span>
+                                </div>
+                                <div class="row">
+                                    <field name="ar_report_interval_days" class="col-2"/>
+                                    <span class="align-middle">Minimum interval (days) between reports per product</span>
+                                </div>
+                            </setting>
+<setting string="Only report actionable products to Discuss"
+                                         help="Post only URGENT and REPLENISH items to the channel. Disable to report every actionable status (REPLENISH, DEMAND INCREASING, WATCH, URGENT).">
+                                <field name="ar_report_urgent_only"/>
+                            </setting>
+                        </block>
+                    </app>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>
