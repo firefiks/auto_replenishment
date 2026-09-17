@@ -1,0 +1,157 @@
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <h2 class="oe_slogan" style="color:#2c3e50;">Auto Replenishment</h2>
+        <h3 class="oe_slogan">Explainable replenishment recommendations based on sales quotations</h3>
+        <div class="oe_span6">
+            <p class="oe_mt32">
+                Turn your open <b>sales quotations</b> into transparent, actionable
+                replenishment signals. Instead of purchasing on gut feeling,
+                <b>Auto Replenishment</b> computes a recommended order quantity for
+                every saleable stock-tracked product and explains exactly why a
+                product was flagged.
+            </p>
+            <p>
+                Nothing is bought automatically: the module only <b>reports</b> and
+                optionally creates <b>draft</b> requests for quotation. You stay in
+                control at every step.
+            </p>
+        </div>
+        <div class="oe_span6">
+            <img class="oe_picture oe_screenshot" src="main_screenshot.png" alt="Auto Replenishment analysis"/>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container oe_dark">
+    <div class="oe_row oe_spaced">
+        <h2 class="oe_slogan">How it works</h2>
+        <div class="oe_span12">
+            <p class="oe_mt32">
+                A daily scheduled action walks every saleable stock-tracked product
+                and aggregates quantities from <code>sale.order.line</code>:
+            </p>
+            <ul>
+                <li><b>Open quotations</b> are weighted by a historical
+                    quotation-to-order <b>conversion rate</b> to estimate expected demand.</li>
+                <li><b>Window demand</b> is computed over short / medium / long /
+                    longest periods (7 / 30 / 90 / 365 days) for confirmed orders and
+                    quotations alike.</li>
+                <li>A deterministic <b>trend</b> signal flags new or strongly
+                    increasing quotation activity.</li>
+                <li>The recommended quantity is:
+                    <br/>
+                    <code>expected demand + safety stock &minus; on hand &minus; incoming</code>,
+                    rounded up to the reordering rule's purchase multiple and the
+                    vendor's minimum quantity.</li>
+                <li>Every record stores a human readable <b>reason</b>: why the
+                    product was flagged, in plain language.</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <h2 class="oe_slogan">Actionable statuses</h2>
+        <div class="oe_span6">
+            <ul class="oe_mt32">
+                <li><span class="badge badge-danger">URGENT</span> &nbsp;recommended &gt; 0, vendor set, on hand + incoming below safety stock</li>
+                <li><span class="badge badge-warning">REPLENISH</span> &nbsp;recommended &gt; 0 and a vendor is configured</li>
+                <li><span class="badge badge-info">DEMAND INCREASING</span> &nbsp;new or strongly growing quotation demand</li>
+                <li><span class="badge badge-info">WATCH</span> &nbsp;expected demand or missing vendor to replenish</li>
+                <li><span class="badge badge-secondary">NORMAL</span> &nbsp;no action needed</li>
+            </ul>
+        </div>
+        <div class="oe_span6">
+            <img class="oe_picture oe_screenshot" src="analysis_list_screenshot.png" alt="Demand analysis list"/>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container oe_dark">
+    <div class="oe_row oe_spaced">
+        <h2 class="oe_slogan">Reported where you work</h2>
+        <div class="oe_span6">
+            <p class="oe_mt32">
+                Actionable products are posted to a Discuss channel
+                (<code>#AutoReplenishment</code>, created automatically). Lines are
+                color-coded by recommended quantity &mdash; <b>5 or more red</b>,
+                <b>1&ndash;4 orange</b>, <b>below 1 black</b> &mdash; and sorted by
+                urgency. Anti-spam keeps the channel clean: a product is re-posted
+                only when its signal changed or the report interval elapsed.
+            </p>
+            <p>
+                A boolean toggle restricts reporting to actionable statuses only
+                (URGENT + REPLENISH) so your buyers see exactly what needs an order.
+            </p>
+        </div>
+        <div class="oe_span6">
+            <img class="oe_picture oe_screenshot" src="discuss_screenshot.png" alt="Discuss channel report"/>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <h2 class="oe_slogan">Create draft RFQs in one click</h2>
+        <p class="oe_mt32">
+            The <b>Create Draft RFQ</b> button generates a <code>purchase.order</code>
+            in <code>draft</code> for the preferred vendor, with the planned date
+            based on vendor delay and quantities respecting minimums and purchase
+            multiples. Duplicate requests are refused when an open order already
+            covers the product. Nothing is confirmed or sent to vendors.
+        </p>
+    </div>
+</section>
+
+<section class="oe_container oe_dark">
+    <div class="oe_row oe_spaced">
+        <h2 class="oe_slogan">Configuration</h2>
+        <div class="oe_span6">
+            <p class="oe_mt32">
+                All behaviour is tuned from Inventory &rarr; Configuration &rarr;
+                Settings &rarr; <b>Auto Replenishment</b>:
+            </p>
+            <ul>
+                <li>Custom demand windows and trend window length</li>
+                <li>Fallback conversion rate, minimum conversion sample and
+                    DEMAND INCREASING growth threshold</li>
+                <li>Safety stock level</li>
+                <li>Channel filter (All / Webshop / Manual / Other)</li>
+                <li>Optional <b>auto-create draft RFQs</b> by the cron
+                    (off by default &mdash; still never confirmed)</li>
+                <li>Discuss integration toggle, channel name and report interval</li>
+            </ul>
+        </div>
+        <div class="oe_span6">
+            <img class="oe_picture oe_screenshot" src="settings_screenshot.png" alt="Configuration settings"/>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <h2 class="oe_slogan" style="color:#2c3e50;">Features at a glance</h2>
+        <div class="oe_span12">
+            <ul class="oe_mt32">
+                <li><b>Transparent math</b>: every recommendation is computed from
+                    live sales data with a stored, human readable reason.</li>
+                <li><b>Quotation-driven</b>: captures demand from open quotations,
+                    not only confirmed orders.</li>
+                <li><b>Color-coded Discuss reporting</b> with anti-spam and
+                    configurable scope.</li>
+                <li><b>Draft RFQ only</b>: no automatic ordering, no vendor
+                    confirmation &mdash; you decide.</li>
+                <li><b>Deterministic</b>: no black-box forecasting, easy to audit
+                    and explain to colleagues.</li>
+                <li><b>Multi-company aware</b> and isolated per warehouse setup.</li>
+                <li><b>Fully tested</b>: 25 automated tests ship with the module
+                    (LGPL-3).</li>
+            </ul>
+            <p class="oe_mt32">
+                Questions or feature requests?
+                <a href="mailto:icedfox@gmail.com">Contact the author</a>.
+            </p>
+        </div>
+    </div>
+</section>

@@ -1,6 +1,6 @@
 {
     'name': 'Auto Replenishment',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.1.0',
     'category': 'Inventory/Purchase',
     'summary': 'Explainable replenishment recommendations based on sales quotations',
     'description': 'Analyse sales quotations and confirmed orders, compute transparent demand-based '
@@ -9,6 +9,15 @@
     'license': 'LGPL-3',
     'author': 'firefiks',
     'website': 'https://github.com/firefiks',
+    'support': 'icedfox@gmail.com',
+    'price': 49,
+    'currency': 'EUR',
+    'images': [
+        'static/description/images/main_screenshot.png',
+        'static/description/images/discuss_screenshot.png',
+        'static/description/images/analysis_list_screenshot.png',
+        'static/description/images/settings_screenshot.png',
+    ],
     'post_init_hook': 'post_init',
     'depends': [
         'sale',
